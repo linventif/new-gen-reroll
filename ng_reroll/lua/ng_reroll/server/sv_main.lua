@@ -7,6 +7,8 @@ util.AddNetworkString("NGReroll")
 //  sql.Query("DROP TABLE ng_reroll")
 sql.Query("CREATE TABLE IF NOT EXISTS ng_reroll (id INTEGER PRIMARY KEY AUTOINCREMENT, player_steamid64 TEXT, nature TEXT DEFAULT 'none', reroll INTEGER DEFAULT " .. NGReroll.Config.RerollDefault .. ", mana INTEGER DEFAULT " .. NGReroll.Config.ManaDefault .. ")")
 
+
+
 // -- // -- // -- // -- // -- // -- // -- //
 //                                        //
 //               Functions                //
@@ -291,11 +293,11 @@ net.Receive("NGReroll", function(len, ply, len)
     elseif id == "reroll" then
         local data = sql.Query("SELECT * FROM ng_reroll WHERE player_steamid64 = '" .. ply:SteamID64() .. "'")
         if data then
-            if data[1].reroll > 0 then
+            if tonumber(data[1].reroll) > 0 then
                 local nature = Reroll(ply)
                 sql.Query("UPDATE ng_reroll SET nature = '" .. nature .. "' WHERE player_steamid64 = '" .. ply:SteamID64() .. "'")
                 ply:SetNWString("NGNature", nature)
-                sql.Query("UPDATE ng_reroll SET reroll = " .. data[1].reroll - 1 .. " WHERE player_steamid64 = '" .. ply:SteamID64() .. "'")
+                sql.Query("UPDATE ng_reroll SET reroll = " .. tonumber(data[1].reroll) - 1 .. " WHERE player_steamid64 = '" .. ply:SteamID64() .. "'")
                 Notif(ply, "Vous avez reroll votre nature.")
             else
                 Notif(ply, "Vous n'avez plus de reroll.")
@@ -303,11 +305,11 @@ net.Receive("NGReroll", function(len, ply, len)
         else
             Notif(ply, "Vous n'avez pas de reroll.")
         end
-    elseif id == "krp" then
-        DeleteData(ply:SteamID64())
-        CreateData(ply:SteamID64())
-        InitData(ply)
-        Notif(ply, "Vos donner on été réinitialisé.")
+    -- elseif id == "krp" then
+    --     DeleteData(ply:SteamID64())
+    --     CreateData(ply:SteamID64())
+    --     InitData(ply)
+    --     Notif(ply, "Vos donner on été réinitialisé.")
     elseif id == "open" then
         local data = sql.Query("SELECT * FROM ng_reroll WHERE player_steamid64 = '" .. ply:SteamID64() .. "'")
         if data then

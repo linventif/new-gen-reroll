@@ -17,10 +17,6 @@ NGReroll.Config.NPCName = "Reroll" // Name of the NPC
 NGReroll.Config.Sound = true // Play a sound when the player is healed
 NGReroll.Config.SoundPath = "vo/npc/Barney/ba_laugh04.wav" // Path of the sound
 
-// Money Settings
-NGReroll.Config.MoneySymbol = "€" // Symbol of the money
-NGReroll.Config.MoneySeparator = " " // Separator of the money$
-
 // HUD Settings
 NGReroll.Config.ShowBar = true // Show the mana bar
 NGReroll.Config.BarColor = Color(69, 129, 197) // Color of the mana bar

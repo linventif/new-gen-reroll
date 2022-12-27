@@ -54,9 +54,7 @@ local function Notif(text)
     end)
 end
 
-local function ConfirmMenu(msg, but_confirm, but_cancel)
-    local but_confirm_text = but_confirm || "Confirmer"
-    local but_cancel_text = but_cancel || "Annuler"
+local function ConfirmMenu(msg, func)
     local frame = vgui.Create("DFrame")
     frame:SetSize(RespW(400), RespH(200))
     frame:Center()
@@ -71,7 +69,7 @@ local function ConfirmMenu(msg, but_confirm, but_cancel)
     local but_cancel = vgui.Create("DButton", frame)
     but_cancel:SetSize(RespW(140), RespH(40))
     but_cancel:SetPos(RespW(40), RespH(130))
-    but_cancel:SetText(but_cancel_text)
+    but_cancel:SetText("Annuler")
     but_cancel:SetFont("LinvFontRobo20")
     but_cancel:SetTextColor(Color(255, 255, 255))
     but_cancel.Paint = function(self, w, h)
@@ -79,21 +77,20 @@ local function ConfirmMenu(msg, but_confirm, but_cancel)
     end
     but_cancel.DoClick = function()
         frame:Remove()
-        return false
     end
     LinvLib.Hover(but_cancel, 8, 0, NGReroll.Config.MenuBackColorElement, NGReroll.Config.MenuHoverColor)
     local but_confirm = vgui.Create("DButton", frame)
     but_confirm:SetSize(RespW(140), RespH(40))
     but_confirm:SetPos(RespW(220), RespH(130))
-    but_confirm:SetText(but_confirm_text)
+    but_confirm:SetText("Confirmer")
     but_confirm:SetFont("LinvFontRobo20")
     but_confirm:SetTextColor(Color(255, 255, 255))
     but_confirm.Paint = function(self, w, h)
         draw.RoundedBox(8, 0, 0, w, h, NGReroll.Config.MenuBackColorElement)
     end
     but_confirm.DoClick = function()
+        func()
         frame:Remove()
-        return true
     end
     LinvLib.Hover(but_confirm, 8, 0, NGReroll.Config.MenuBackColorElement, NGReroll.Config.MenuHoverColor)
 end
@@ -430,10 +427,12 @@ local function RerollMenu(data)
             return
         else
             frame:Close()
-            if ConfirmMenu("Êtes vous sur de vouloir utiliser un reroll ?") then
+            if ConfirmMenu("Êtes vous sur de vouloir utiliser un reroll ?", function()
                 net.Start("NGReroll")
                     net.WriteString("reroll")
                 net.SendToServer()
+            end) then
+                return
             end
         end
     end
@@ -454,11 +453,14 @@ local function RerollMenu(data)
             return
         else
             frame:Close()
-            if ConfirmMenu("Êtes vous sur de vouloir tuer ce personnage ?") then
-                net.Start("NGReroll")
-                    net.WriteString("rpk")
-                net.SendToServer()
-            end
+            -- if ConfirmMenu("Êtes vous sur de vouloir tuer ce personnage ?", function()
+            --     net.Start("NGReroll")
+            --         net.WriteString("rpk")
+            --     net.SendToServer()
+            -- end) then
+            --     return
+            -- end
+            Notif("Cette fonctionnalité est désactivée pour le moment !")
         end
     end
     LinvLib.Hover(but_rpk, 8, 0, NGReroll.Config.MenuBackColorElement, NGReroll.Config.MenuHoverColor)
