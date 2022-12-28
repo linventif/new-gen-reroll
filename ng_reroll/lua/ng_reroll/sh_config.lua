@@ -11,6 +11,8 @@ NGReroll.Config.Admin = { // Admins
     ["superadmin"] = true,
     ["admin"] = true
 }
+NGReroll.Config.ShakeForce = 3 // Force of the screen shake
+NGReroll.Config.ShakeTime = 0.5 // Time of the screen shake
 
 // NPC Settings
 NGReroll.Config.NPCName = "Reroll" // Name of the NPC
@@ -128,7 +130,6 @@ NGReroll.Config.ManaRegen = { // Mana regen
 
 // Reroll Settings
 NGReroll.Config.RerollDefault = 2 // Default reroll of the player
-
 NGReroll.Config.Nature = {
     ["soil"] = {
         ["name"] = "Terre", // Name

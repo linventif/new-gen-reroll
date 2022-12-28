@@ -144,8 +144,8 @@ end
 if NGReroll.Config.ManaRegenDelay > 0 then
     timer.Create("NGRerollRegenMana", NGReroll.Config.ManaRegenDelay, 0, function()
         for _, ply in pairs(player.GetAll()) do
-            local mana = ply:GetNWInt("NGMana")
-            local mana_max = ply:GetNWInt("NGManaMax")
+            local mana = tonumber(ply:GetNWInt("NGMana"))
+            local mana_max = tonumber(ply:GetNWInt("NGManaMax"))
             if mana < mana_max then
                 local new_man = mana + NGReroll.Config.ManaRegen[ply:GetUserGroup()]
                 if new_man > mana_max then new_man = mana_max end
