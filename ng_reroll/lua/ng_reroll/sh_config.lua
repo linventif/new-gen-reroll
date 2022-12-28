@@ -109,12 +109,21 @@ NGReroll.Config.AdminDefaultValue = {
 // Mana Give Settings
 NGReroll.Config.ManaDefault = 100 // Default mana of the player
 NGReroll.Config.ManaGiveKill = 10 // Mana given to the player when he kills someone (-1 to disable)
-NGReroll.Config.ManaGiveDelay = 30 // Delay between each mana (-1 to disable)
+NGReroll.Config.ManaGiveDelay = 300 // Delay between each mana (-1 to disable)
 NGReroll.Config.ManaGive = { // Mana given to the player
-    ["user"] = 1,
-    ["vip"] = 2,
-    ["admin"] = 3,
-    ["superadmin"] = 4
+    ["user"] = 10,
+    ["vip"] = 20,
+    ["admin"] = 30,
+    ["superadmin"] = 40
+}
+
+// Mana Regen Settings
+NGReroll.Config.ManaRegenDelay = 5 // Delay between each mana regen (-1 to disable)
+NGReroll.Config.ManaRegen = { // Mana regen
+    ["user"] = 20,
+    ["vip"] = 40,
+    ["admin"] = 60,
+    ["superadmin"] = 70
 }
 
 // Reroll Settings

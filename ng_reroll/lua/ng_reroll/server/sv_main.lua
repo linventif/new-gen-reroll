@@ -130,13 +130,33 @@ end
 //                                        //
 // -- // -- // -- // -- // -- // -- // -- //
 
+timer.Remove("NGRerollGiveMana")
+timer.Remove("NGReroll")
+timer.Remove("NGReroll:GiveMana")
+timer.Remove("NGReroll:RegenMana")
+timer.Remove("NGRerollRegenMana")
+
 if NGReroll.Config.ManaGiveDelay > 0 then
-    timer.Create("NGReroll", NGReroll.Config.ManaGiveDelay, 0, function()
+    timer.Create("NGRerollGiveMana", NGReroll.Config.ManaGiveDelay, 0, function()
         for _, ply in pairs(player.GetAll()) do
             local mana_sup = NGReroll.Config.ManaGive[ply:GetUserGroup()]
             ply:SetNWInt("NGMana", ply:GetNWInt("NGMana") + mana_sup)
             ply:SetNWInt("NGManaMax", ply:GetNWInt("NGManaMax") + mana_sup)
             ply:ChatPrint("Votre limite de mana a augmenté de " .. mana_sup .. ".")
+        end
+    end)
+end
+
+if NGReroll.Config.ManaRegenDelay > 0 then
+    timer.Create("NGRerollRegenMana", NGReroll.Config.ManaRegenDelay, 0, function()
+        for _, ply in pairs(player.GetAll()) do
+            local mana = ply:GetNWInt("NGMana")
+            local mana_max = ply:GetNWInt("NGManaMax")
+            if mana < mana_max then
+                local new_man = mana + NGReroll.Config.ManaRegen[ply:GetUserGroup()]
+                if new_man > mana_max then new_man = mana_max end
+                ply:SetNWInt("NGMana", new_man)
+            end
         end
     end)
 end
