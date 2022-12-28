@@ -25,7 +25,7 @@ local name = "NG Reroll"
 local full_name = "New Generation Reroll"
 local workshop = {}
 local license = "CC BY-SA 4.0"
-local version = "0.1.1"
+local version = "0.1.2"
 
 NGReroll = {}
 NGReroll.Config = {}

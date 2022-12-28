@@ -130,12 +130,6 @@ end
 //                                        //
 // -- // -- // -- // -- // -- // -- // -- //
 
-timer.Remove("NGRerollGiveMana")
-timer.Remove("NGReroll")
-timer.Remove("NGReroll:GiveMana")
-timer.Remove("NGReroll:RegenMana")
-timer.Remove("NGRerollRegenMana")
-
 if NGReroll.Config.ManaGiveDelay > 0 then
     timer.Create("NGRerollGiveMana", NGReroll.Config.ManaGiveDelay, 0, function()
         for _, ply in pairs(player.GetAll()) do
