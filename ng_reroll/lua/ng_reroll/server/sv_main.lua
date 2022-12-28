@@ -20,6 +20,7 @@ local function Reroll(ply)
     if math.Rand(1, 100) <= nature.drop then
         return table.KeyFromValue(NGReroll.Config.Nature, nature)
     else
+        ply:KillSilent()
         return Reroll(ply)
     end
 end
@@ -107,10 +108,10 @@ local function InitData(ply)
         if data[1].nature == "none" then
             SetNature(ply, Reroll(ply))
         end
-        if !NGReroll.Config.Nature[nature] then
+        if !NGReroll.Config.Nature[ply:GetNWString("NGNature")] then
             SetNature(ply, Reroll(ply))
-        else
-            for k, v in pairs(NGReroll.Config.Nature[nature].level[GetLevel(ply)].weapons) do
+        elseif NGReroll.Config.Nature[ply:GetNWString("NGNature")] then
+            for k, v in pairs(NGReroll.Config.Nature[ply:GetNWString("NGNature")].level[GetLevel(ply)].weapons) do
                 ply:Give(k)
             end
         end

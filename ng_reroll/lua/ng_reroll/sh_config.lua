@@ -6,18 +6,15 @@
 
 // General Settings
 NGReroll.Config.Language = "french" // Language (french) you can add your own language in sh_language.lua
-NGReroll.Config.ModelPath = "models/Humans/Group02/Female_03.mdl" // Path of the model of the NPC
 NGReroll.Config.Admin = { // Admins
     ["superadmin"] = true,
     ["admin"] = true
 }
-NGReroll.Config.ShakeForce = 3 // Force of the screen shake
-NGReroll.Config.ShakeTime = 0.5 // Time of the screen shake
 
 // NPC Settings
 NGReroll.Config.NPCName = "Reroll" // Name of the NPC
-NGReroll.Config.Sound = true // Play a sound when the player is healed
-NGReroll.Config.SoundPath = "vo/npc/Barney/ba_laugh04.wav" // Path of the sound
+NGReroll.Config.ModelPath = "models/Humans/Group02/Female_03.mdl" // Path of the model of the NPC
+NGReroll.Config.SoundPath = "vo/npc/Barney/ba_laugh04.wav" // Path of the sound of the NPC ("" to disable)
 
 // HUD Settings
 NGReroll.Config.ShowBar = true // Show the mana bar
@@ -108,9 +105,11 @@ NGReroll.Config.AdminDefaultValue = {
     }
 }
 
-// Mana Give Settings
+// Mana Settings
 NGReroll.Config.ManaDefault = 100 // Default mana of the player
 NGReroll.Config.ManaGiveKill = 10 // Mana given to the player when he kills someone (-1 to disable)
+NGReroll.Config.ShakeForce = 3 // Force of the screen shake when the don't have enough mana
+NGReroll.Config.ShakeTime = 0.5 // Time of the screen shake when the don't have enough mana
 NGReroll.Config.ManaGiveDelay = 300 // Delay between each mana (-1 to disable)
 NGReroll.Config.ManaGive = { // Mana given to the player
     ["user"] = 10,
@@ -118,8 +117,6 @@ NGReroll.Config.ManaGive = { // Mana given to the player
     ["admin"] = 30,
     ["superadmin"] = 40
 }
-
-// Mana Regen Settings
 NGReroll.Config.ManaRegenDelay = 5 // Delay between each mana regen (-1 to disable)
 NGReroll.Config.ManaRegen = { // Mana regen
     ["user"] = 20,
@@ -215,6 +212,15 @@ NGReroll.Config.Weapons = {
 
 /*
 
+    Add this line in the weapon how you want to use the mana
+    change cost to the cost of the weapon add minus before cost to give mana
+
     if !NGRUseWep(self, cost) then return end
+
+    Example for weapon_fists.lua use 100 mana to attack:
+        [...]
+        function SWEP:PrimaryAttack( right )
+            if !NGRUseWep(self, 100) then return end
+        [...]
 
 */
