@@ -84,10 +84,10 @@ local function SaveData(ply)
 end
 
 local function GetLevel(ply)
+    if !NGReroll.Config.Nature[ply:GetNWString("NGNature")] then return 0 end
     local mana = ply:GetNWInt("NGMana")
     mana = tonumber(mana)
-    local nature = ply:GetNWString("NGNature")
-    for k, v in pairs(NGReroll.Config.Nature[nature].level) do
+    for k, v in pairs(NGReroll.Config.Nature[ply:GetNWString("NGNature")].level) do
         if mana >= v.mana_min && mana <= v.mana_max then
             return k
         end
@@ -101,20 +101,15 @@ local function InitData(ply)
         CreateData(ply:SteamID64())
         InitData(ply)
     else
+        if data[1].nature == "none" || !NGReroll.Config.Nature[data[1].nature] then
+            SetNature(ply, Reroll(ply))
+            InitData(ply)
+            return
+        end
         ply:SetNWInt("NGReroll", data[1].reroll)
         ply:SetNWInt("NGMana", data[1].mana)
         ply:SetNWInt("NGManaMax", data[1].mana)
         ply:SetNWString("NGNature", data[1].nature)
-        if data[1].nature == "none" then
-            SetNature(ply, Reroll(ply))
-        end
-        if !NGReroll.Config.Nature[ply:GetNWString("NGNature")] then
-            SetNature(ply, Reroll(ply))
-        elseif NGReroll.Config.Nature[ply:GetNWString("NGNature")] then
-            for k, v in pairs(NGReroll.Config.Nature[ply:GetNWString("NGNature")].level[GetLevel(ply)].weapons) do
-                ply:Give(k)
-            end
-        end
     end
 end
 
@@ -123,6 +118,16 @@ local function Notif(ply, text)
         net.WriteString("notif")
         net.WriteString(text)
     net.Send(ply)
+end
+
+local function GetWeps(ply)
+    local nature = ply:GetNWString("NGNature")
+    if NGReroll.Config.Nature[nature] then
+        for k, v in pairs(NGReroll.Config.Nature[nature].level[GetLevel(ply)].weapons) do
+            ply:Give(k)
+        end
+        ply:ChatPrint("Arme de nature et de niveau attribuées !")
+    end
 end
 
 // -- // -- // -- // -- // -- // -- // -- //
@@ -134,7 +139,7 @@ end
 if NGReroll.Config.ManaGiveDelay > 0 then
     timer.Create("NGRerollGiveMana", NGReroll.Config.ManaGiveDelay, 0, function()
         for _, ply in pairs(player.GetAll()) do
-            local mana_sup = NGReroll.Config.ManaGive[ply:GetUserGroup()]
+            local mana_sup = NGReroll.Config.ManaGive[ply:GetUserGroup()] or NGReroll.Config.ManaGive["user"] or 0
             ply:SetNWInt("NGMana", ply:GetNWInt("NGMana") + mana_sup)
             ply:SetNWInt("NGManaMax", ply:GetNWInt("NGManaMax") + mana_sup)
             ply:ChatPrint("Votre limite de mana a augmenté de " .. mana_sup .. ".")
@@ -180,6 +185,10 @@ hook.Add("PlayerSpawn", "NGReroll:PlayerSpawn", function(ply)
     InitData(ply)
 end)
 
+hook.Add("PlayerLoadout", "NGReroll:PlayerLoadout", function(ply)
+    GetWeps(ply)
+end)
+
 hook.Add("PlayerDisconnected", "NGReroll", function(ply)
     SaveData(ply)
 end)
@@ -190,6 +199,16 @@ end)
 //          No Admin Verification         //
 //                                        //
 // -- // -- // -- // -- // -- // -- // -- //
+
+concommand.Add("ngr_drop_db", function(ply, cmd, args)
+    sql.Query("DROP TABLE ng_reroll IF EXISTS")
+    print("La base de données a été supprimée.")
+end)
+
+concommand.Add("ngr_create_db", function(ply, cmd, args)
+    sql.Query("CREATE TABLE IF NOT EXISTS ng_reroll (id INTEGER PRIMARY KEY AUTOINCREMENT, player_steamid64 TEXT, nature TEXT DEFAULT 'none', reroll INTEGER DEFAULT " .. NGReroll.Config.RerollDefault .. ", mana INTEGER DEFAULT " .. NGReroll.Config.ManaDefault .. ")")
+    print("La base de données a été créée.")
+end)
 
 concommand.Add("ngr_edit_mana", function(ply, cmd, args)
     local data = sql.Query("SELECT * FROM ng_reroll WHERE player_steamid64 = '" .. args[1] .. "'")

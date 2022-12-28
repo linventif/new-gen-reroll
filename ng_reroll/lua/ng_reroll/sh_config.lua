@@ -204,7 +204,7 @@ NGReroll.Config.Nature = {
     }
 }
 
-NGReroll.Config.Weapons = {
+NGReroll.Config.Weapons = { // Weapons Custom Name
     ["weapon_pistol"] = "Pistol",
     ["weapon_357"] = "357",
     ["weapon_smg1"] = "SMG1"

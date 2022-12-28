@@ -21,11 +21,9 @@ end
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 local folder = "ng_reroll"
-local name = "NG Reroll"
-local full_name = "New Generation Reroll"
-local workshop = {}
-local license = "CC BY-SA 4.0"
-local version = "0.1.3"
+local name = "New Gen Reroll"
+local license = "Commercial"
+local version = "0.1.4"
 
 NGReroll = {}
 NGReroll.Config = {}
@@ -33,17 +31,11 @@ LinvLib.Install["new-gen-reroll"] = version
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
+LinvLib.LoadStr(name, version, license)
 LinvLib.Load(name, folder, {"sh_config.lua", "sh_language.lua"})
-
-if SERVER then
-    LinvLib.LoadWorkshop(workshop, name)
-    LinvLib.LoadMaterials(folder .. "/materials", name)
-end
-
 LinvLib.Loader(folder .. "/shared", name)
 LinvLib.Loader(folder .. "/server", name)
 LinvLib.Loader(folder .. "/client", name)
-LinvLib.LoadStr(full_name, version, license)
 
 print(" ")
 print(" ")
