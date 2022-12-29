@@ -374,22 +374,22 @@ local function RerollMenu(data)
         draw.SimpleText("Actions", "LinvFontRobo25", RespW(660), RespH(230), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         draw.RoundedBox(8, RespW(30), RespH(90), RespW(235), RespH(250), NGReroll.Config.MenuBackColorElement)
         draw.RoundedBox(8, RespW(295), RespH(90), RespW(235), RespH(250), NGReroll.Config.MenuBackColorElement)
-        draw.SimpleText("Nom : " .. data[1].name, "LinvFontRobo20", RespW(140), RespH(110), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Mana : " .. data[1].mana, "LinvFontRobo20", RespW(140), RespH(150), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        if NGReroll.Config.ManaGive[data[1].group] then
-            draw.SimpleText("Boost Mana : Actif " .. NGReroll.Config.ManaGive[data[1].group] .. "x", "LinvFontRobo20", RespW(140), RespH(190), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Nom : " .. data.name, "LinvFontRobo20", RespW(140), RespH(110), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Mana : " .. data.mana, "LinvFontRobo20", RespW(140), RespH(150), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if NGReroll.Config.ManaGive[data.group] then
+            draw.SimpleText("Boost Mana : Actif " .. NGReroll.Config.ManaGive[data.group] .. "x", "LinvFontRobo20", RespW(140), RespH(190), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         else
             draw.SimpleText("Boost Mana : Non Actif", "LinvFontRobo20", RespW(140), RespH(190), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
-        draw.SimpleText("Nature : " .. NGReroll.Config.Nature[data[1].nature].name, "LinvFontRobo20", RespW(140), RespH(230), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Reroll : " .. data[1].reroll, "LinvFontRobo20", RespW(140), RespH(270), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Level : " .. data[1].level, "LinvFontRobo20", RespW(140), RespH(310), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Nature : " .. NGReroll.Config.Nature[data.nature].name, "LinvFontRobo20", RespW(140), RespH(230), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Reroll : " .. data.reroll, "LinvFontRobo20", RespW(140), RespH(270), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Level : " .. data.level, "LinvFontRobo20", RespW(140), RespH(310), Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         DisableClipping(true)
     end
     local scroll_wep = vgui.Create("DScrollPanel", frame)
     scroll_wep:SetSize(RespW(235), RespH(250))
     scroll_wep:SetPos(RespW(295), RespH(90))
-    if data[1].level == 0 then
+    if data.level == 0 then
         local lab_wep = vgui.Create("DLabel", scroll_wep)
         lab_wep:SetSize(RespW(235), RespH(40))
         lab_wep:SetText("Aucune")
@@ -400,7 +400,7 @@ local function RerollMenu(data)
         lab_wep:SetContentAlignment(5)
         lab_wep.Paint = function(self, w, h) return end
     else
-        for k, v in pairs(NGReroll.Config.Nature[data[1].nature].level[data[1].level].weapons) do
+        for k, v in pairs(NGReroll.Config.Nature[data.nature].level[data.level].weapons) do
             local lab_wep = vgui.Create("DLabel", scroll_wep)
             lab_wep:SetSize(RespW(235), RespH(40))
             lab_wep:SetText(NGReroll.Config.Weapons[k] || k)
@@ -422,7 +422,7 @@ local function RerollMenu(data)
         draw.RoundedBox(8, 0, 0, w, h, NGReroll.Config.MenuBackColorElement)
     end
     but_reroll.DoClick = function()
-        if data[1].player_steamid64 != LocalPlayer():SteamID64() then
+        if data.steamid64 != LocalPlayer():SteamID64() then
             Notif("Vous n'êtes pas le propriétaire de ce personnage !")
             return
         else
@@ -447,8 +447,7 @@ local function RerollMenu(data)
         draw.RoundedBox(8, 0, 0, w, h, NGReroll.Config.MenuBackColorElement)
     end
     but_rpk.DoClick = function()
-        print(data[1].steamid)
-        if data[1].player_steamid64 != LocalPlayer():SteamID64() then
+        if data.steamid64 != LocalPlayer():SteamID64() then
             Notif("Vous n'êtes pas le propriétaire de ce personnage !")
             return
         else

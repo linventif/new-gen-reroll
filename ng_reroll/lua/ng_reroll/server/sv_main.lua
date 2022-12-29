@@ -72,7 +72,7 @@ end
 local function CanReroll(ply)
     local data = GetData(ply:SteamID64())
     if !data then return false end
-    if data.reroll > 0 then
+    if tonumber(data.reroll) > 0 then
         return true
     else
         return false
@@ -143,6 +143,11 @@ local function InitData(ply)
     local data = GetData(ply:SteamID64())
     if !data then
         CreateData(ply:SteamID64())
+        InitData(ply)
+        return
+    end
+    if !NGReroll.Config.Nature[data.nature] then
+        EditData(ply:SteamID64(), "nature", Reroll())
         InitData(ply)
         return
     end
@@ -237,7 +242,7 @@ concommand.Add("ngr_drop_db", function(ply, cmd, args)
 end)
 
 concommand.Add("ngr_create_db", function(ply, cmd, args)
-    sql.Query("CREATE TABLE ng_reroll (id INTEGER PRIMARY KEY AUTOINCREMENT, steamid64 TEXT, nature TEXT DEFAULT 'none', reroll INTEGER DEFAULT " .. NGReroll.Config.RerollDefault .. ", mana INTEGER DEFAULT " .. NGReroll.Config.ManaDefault .. ")")
+    sql.Query("CREATE TABLE ng_reroll (id INTEGER PRIMARY KEY AUTOINCREMENT, steamid64 TEXT, nature TEXT DEFAULT " .. Reroll() .. ", reroll INTEGER DEFAULT " .. NGReroll.Config.RerollDefault .. ", mana INTEGER DEFAULT " .. NGReroll.Config.ManaDefault .. ")")
     print("La base de données a été créée.")
 end)
 
