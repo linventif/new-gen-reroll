@@ -197,10 +197,9 @@ if NGReroll.Config.ManaRegenDelay > 0 then
             local mana = tonumber(tonumber(ply:GetNWInt("NGMana")))
             local mana_max = tonumber(tonumber(ply:GetNWInt("NGManaMax")))
             if mana < mana_max then
-                local new_man1 = math.Round(mana_max * (NGReroll.Config.ManaRegen[ply:GetUserGroup()]/100))
-                local new_man2 = mana + new_man1
-                if new_man2 > new_man2 then new_man2 = mana_max end
-                ply:SetNWInt("NGMana", new_man2)
+                local new_man = mana_max * (NGReroll.Config.ManaRegen[ply:GetUserGroup()]/100)
+                if new_man > mana_max then new_man = mana_max end
+                ply:SetNWInt("NGMana", new_man)
             end
         end
     end)

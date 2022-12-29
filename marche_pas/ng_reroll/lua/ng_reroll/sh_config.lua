@@ -118,11 +118,11 @@ NGReroll.Config.ManaGive = { // Mana given to the player
     ["superadmin"] = 40
 }
 NGReroll.Config.ManaRegenDelay = 5 // Delay between each mana regen (-1 to disable)
-NGReroll.Config.ManaRegen = { // Mana regen in percent
-    ["user"] = 10,
-    ["vip"] = 15,
-    ["admin"] = 20,
-    ["superadmin"] = 20
+NGReroll.Config.ManaRegen = { // Mana regen
+    ["user"] = 20,
+    ["vip"] = 40,
+    ["admin"] = 60,
+    ["superadmin"] = 70
 }
 
 // Reroll Settings
