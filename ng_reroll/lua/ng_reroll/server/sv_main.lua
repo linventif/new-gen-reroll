@@ -36,7 +36,7 @@ sql.Query("CREATE TABLE IF NOT EXISTS ng_reroll (id INTEGER PRIMARY KEY AUTOINCR
 // -- // -- // -- // -- // -- // -- // -- //
 
 local function CreateData(steamid64)
-    sql.Query("INSERT INTO ng_reroll (steamid64) VALUES ('" .. steamid64 .. "')")
+    sql.Query("INSERT INTO ng_reroll (steamid64, nature) VALUES ('" .. steamid64 .. "', '" .. Reroll() .. "')")
 end
 
 local function DeleteData(steamid64)
@@ -52,8 +52,9 @@ local function GetData(steamid64)
     if !data then
         CreateData(steamid64)
         return GetData(steamid64)
+    else
+        return data[1]
     end
-    return data[1]
 end
 
 // -- // -- // -- // -- // -- // -- // -- //
@@ -142,23 +143,13 @@ local function InitData(ply)
     local data = GetData(ply:SteamID64())
     if !data then
         CreateData(ply:SteamID64())
-        ply:KillSilent()
         InitData(ply)
         return
-    else
-        PrintTable(data)
-//        if !NGReroll.Config.Nature[data.nature] then
-//            SetNature(ply, Reroll())
-//            //InitData(ply)
-//            print("NO2P")
-//            return
-//        else
-//            ply:SetNWInt("NGReroll", data.reroll)
-//            ply:SetNWInt("NGMana", data.mana)
-//            ply:SetNWInt("NGManaMax", data.mana)
-//            ply:SetNWString("NGNature", data.nature)
-//        end
     end
+    ply:SetNWInt("NGReroll", tonumber(data.reroll))
+    ply:SetNWInt("NGMana", tonumber(data.mana))
+    ply:SetNWInt("NGManaMax", tonumber(data.mana))
+    ply:SetNWString("NGNature", data.nature)
 end
 
 local function PlySpawn(ply)
@@ -197,7 +188,7 @@ if NGReroll.Config.ManaRegenDelay > 0 then
             local mana = tonumber(tonumber(ply:GetNWInt("NGMana")))
             local mana_max = tonumber(tonumber(ply:GetNWInt("NGManaMax")))
             if mana < mana_max then
-                local new_man1 = math.Round(mana_max * (NGReroll.Config.ManaRegen[ply:GetUserGroup()]/100))
+                local new_man1 = math.Round(mana_max * ((NGReroll.Config.ManaRegen[ply:GetUserGroup()] || NGReroll.Config.ManaRegenDefault) / 100))
                 local new_man2 = mana + new_man1
                 if new_man2 > new_man2 then new_man2 = mana_max end
                 ply:SetNWInt("NGMana", new_man2)
@@ -241,17 +232,24 @@ end)
 // -- // -- // -- // -- // -- // -- // -- //
 
 concommand.Add("ngr_drop_db", function(ply, cmd, args)
-    sql.Query("DROP TABLE ng_reroll IF EXISTS")
+    sql.Query("DROP TABLE ng_reroll")
     print("La base de données a été supprimée.")
 end)
 
 concommand.Add("ngr_create_db", function(ply, cmd, args)
-    sql.Query("CREATE TABLE IF NOT EXISTS ng_reroll (id INTEGER PRIMARY KEY AUTOINCREMENT, steamid64 TEXT, nature TEXT DEFAULT 'none', reroll INTEGER DEFAULT " .. NGReroll.Config.RerollDefault .. ", mana INTEGER DEFAULT " .. NGReroll.Config.ManaDefault .. ")")
+    sql.Query("CREATE TABLE ng_reroll (id INTEGER PRIMARY KEY AUTOINCREMENT, steamid64 TEXT, nature TEXT DEFAULT 'none', reroll INTEGER DEFAULT " .. NGReroll.Config.RerollDefault .. ", mana INTEGER DEFAULT " .. NGReroll.Config.ManaDefault .. ")")
     print("La base de données a été créée.")
-    for _, ply in pairs(player.GetAll()) do
-        InitData(ply)
+end)
+
+concommand.Add("ngr_show_db", function(ply, cmd, args)
+    local data = sql.Query("SELECT * FROM ng_reroll")
+    if data then
+        PrintTable(data)
+    else
+        print("La base de données est vide.")
     end
 end)
+
 
 concommand.Add("ngr_set_mana", function(ply, cmd, args)
     EditData(args[1], "mana", args[2])
