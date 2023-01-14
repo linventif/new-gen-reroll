@@ -23,7 +23,7 @@ end
 local folder = "ng_reroll"
 local name = "New Gen Reroll"
 local license = "Commercial"
-local version = "0.1.4"
+local version = "0.1.8"
 
 NGReroll = {}
 NGReroll.Config = {}

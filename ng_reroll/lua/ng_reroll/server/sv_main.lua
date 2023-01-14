@@ -70,9 +70,8 @@ local function SaveDataPlayer(ply)
 end
 
 local function CanReroll(ply)
-    local data = GetData(ply:SteamID64())
-    if !data then return false end
-    if tonumber(data.reroll) > 0 then
+    local reroll = ply:GetNWInt("NGReroll")
+    if tonumber(reroll) > 0 then
         return true
     else
         return false
@@ -161,6 +160,7 @@ local function PlySpawn(ply)
     local nature = ply:GetNWString("NGNature")
     local mana_max = tonumber(ply:GetNWInt("NGManaMax"))
     ply:SetNWInt("NGMana", mana_max)
+    if !NGReroll.Config.Nature[nature] || !NGReroll.Config.Nature[nature].level || !NGReroll.Config.Nature[nature].level[GetLevel(ply)] || !NGReroll.Config.Nature[nature].level[GetLevel(ply)].weapons then return end
     local weps = NGReroll.Config.Nature[nature].level[GetLevel(ply)].weapons
     if weps then
         for k, v in pairs(weps) do
@@ -329,11 +329,13 @@ net.Receive("NGReroll", function(len, ply, len)
     elseif id == "reroll" then
         local data = GetData(ply:SteamID64())
         if data && CanReroll(ply) then
-            EditData(ply:SteamID64(), "reroll", data.reroll - 1)
+            EditData(ply:SteamID64(), "reroll", tonumber(data.reroll) - 1)
+            ply:SetNWInt("NGReroll", tonumber(data.reroll) - 1)
             local nature = Reroll()
             EditData(ply:SteamID64(), "nature", nature)
             ply:SetNWString("NGNature", nature)
             Notif(ply, "Vous avez reroll votre nature.")
+            ply:KillSilent()
         else
             Notif(ply, "Vous n'avez pas de reroll.")
         end

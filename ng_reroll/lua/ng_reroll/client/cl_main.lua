@@ -12,10 +12,10 @@ if NGReroll.Config.ShowBar then
         local maxmana = LocalPlayer():GetNWInt("NGManaMax")
         local mana = math.Clamp(LocalPlayer():GetNWInt("NGMana"), 0, maxmana)
         local percent = math.Clamp((mana / maxmana) * 100, 0, 100)
-        draw.RoundedBox(7, RespW((ScrW() / 2) - 400 / 2) - 6, RespH(ScrH() - 70 - 6), RespW(400 + 12), RespH(30 + 12), NGReroll.Config.BarBackColor2)
-        draw.RoundedBox(6, RespW((ScrW() / 2 ) - 400 / 2), RespH(ScrH() - 70 ), RespW(400), RespH(30), NGReroll.Config.BarBackColor)
-        draw.RoundedBox(6, RespW((ScrW() / 2) - (percent * 4) / 2), RespH(ScrH() - 70), RespW((percent * 4)), RespH(30), NGReroll.Config.BarColor)
-        draw.SimpleText("Mana : " .. mana .. " / " .. maxmana, "LinvFontRobo20", RespW(ScrW() / 2), RespH(ScrH() - 55), NGReroll.Config.TextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.RoundedBox(7, RespW(960 - 400 / 2 - 6), RespH(1080 - 70 - 6), RespW(400 + 12), RespH(30 + 12), NGReroll.Config.BarBackColor2)
+        draw.RoundedBox(6, RespW(960 - 400 / 2), RespH(1080 - 70), RespW(400), RespH(30), NGReroll.Config.BarBackColor)
+        draw.RoundedBox(6, RespW(960 - (percent * 4) / 2), RespH(1080 - 70), RespW((percent * 4)), RespH(30), NGReroll.Config.BarColor)
+        draw.SimpleText("Mana : " .. mana .. " / " .. maxmana, "LinvFontRobo20", RespW(960), RespH(1080 - 55), NGReroll.Config.TextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end)
 end
 
@@ -174,6 +174,7 @@ local function OpenMenuAdmnin()
     local scroll_player = vgui.Create("DScrollPanel", frame)
     scroll_player:SetSize(RespW(250), RespH(480))
     scroll_player:SetPos(RespW(30), RespH(90))
+    LinvLib.HideVBar(scroll_player)
     for _, ply in pairs(player.GetAll()) do
         local id = ply_num
         local but_player = vgui.Create("DButton", scroll_player)
